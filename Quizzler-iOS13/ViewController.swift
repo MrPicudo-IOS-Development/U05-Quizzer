@@ -36,12 +36,19 @@ class ViewController: UIViewController {
     @IBAction func answerButtonPressed(_ sender: UIButton) {
         // print(sender.currentTitle!)
         let userAnswer = sender.currentTitle! // Puede ser "True" o "False"
+        // Guardamos la respuesta correcta del arreglo de objetos.
         let correctAnswer = quiz[questionNumber].answer
+        // Hacemos ligeramente transparente el botón presionado y modificamos la fuente del botón presionado.
+        sender.alpha = 0.5
+        sender.titleLabel?.font = UIFont.boldSystemFont(ofSize: 27.0)
+        // Estructura condicional para retroalimentar sobre la respuesta seleccionada.
         if (userAnswer == correctAnswer) {
             questionLabel.text = "Correct!" // Actualizamos el texto de la etiqueta con el resultado de la respuesta elegida.
+            sender.backgroundColor = UIColor.green
         }
         else {
             questionLabel.text = "Try again!"
+            sender.backgroundColor = UIColor.red
             questionNumber -= 1
         }
         // Si el número de pregunta todavía no llega al número de preguntas totales menos 1...
@@ -52,14 +59,21 @@ class ViewController: UIViewController {
             questionNumber = 0
         }
         // El siguiente método hace que el programa espere 0.5 segundos para realizar lo que tenga en su bloque de código.
-        DispatchQueue.main.asyncAfter(deadline: .now() + 0.5) {
+        DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
             self.updateUI() // Actualizamos la etiqueta a la siguiente pregunta.
         }
     }
     
-    // Función para cambiar la pregunta mostrada en la interfaz
+    // Función para cambiar la pregunta mostrada en la interfaz, reiniciar las características de los botones y actualizar la barra de progreso
     func updateUI() {
         questionLabel.text = quiz[questionNumber].text
+        trueButton.backgroundColor = UIColor.clear
+        trueButton.titleLabel?.font = UIFont.systemFont(ofSize: 25.0)
+        trueButton.alpha = 1.0
+        falseButton.backgroundColor = UIColor.clear
+        falseButton.titleLabel?.font = UIFont.systemFont(ofSize: 25.0)
+        falseButton.alpha = 1.0
+        progressBar.progress = Float(questionNumber+1)/Float(quiz.count)
     }
     
 }
@@ -81,5 +95,7 @@ class ViewController: UIViewController {
  let quiz = [Question(text: "4 + 2 = 6", answer: "True"), Question(text: "5 - 3 = 1", answer: "False"), Question(text: "3 + 8 = 10", answer: "False"),
              Question(text: "7 x 12 = 84", answer: "True"), Question(text: "9 x 21 = 188", answer: "False"), Question(text: "3 x 17 = 51", answer: "True"),
              Question(text: "91 ÷ 7 = 13", answer: "True"), Question(text: "198 ÷ 9 = 23", answer: "False"), Question(text: "121 ÷ 11 = 12", answer: "False")]
+ 
+ NOTA: Para que la progress bar funcione, además de estar posicionada bien, debe de tener constraints que la alargen sobre todo el contenedor.
  
  */
