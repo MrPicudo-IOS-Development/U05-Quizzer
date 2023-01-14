@@ -18,32 +18,23 @@ class ViewController: UIViewController {
 
     // Función para los botones de true y false
     @IBAction func answerButtonPressed(_ sender: UIButton) {
-        let userAnswer = sender.currentTitle! // Puede ser "True" o "False", nunca va a ser nulo.
-        // Mandamos a llamar a la función para revisar la respuesta del usuario.
-        quizBrain.checkAnswer(userAnswer)
-        
-        
         // Hacemos ligeramente transparente el botón presionado y modificamos la fuente del botón presionado.
         sender.alpha = 0.5
         sender.titleLabel?.font = UIFont.boldSystemFont(ofSize: 27.0)
-        // Estructura condicional para retroalimentar sobre la respuesta seleccionada.
-        if (userAnswer == correctAnswer) {
+        
+        // Mandamos a llamar a la función para revisar la respuesta del usuario en una estructura condicional para retroalimentar sobre la respuesta seleccionada.
+        if (quizBrain.checkAnswer(sender.currentTitle!)) { // La respuesta que ha seleccionado el usuario está en "sender.currentTitle!"
             questionLabel.text = "Correct!" // Actualizamos el texto de la etiqueta con el resultado de la respuesta elegida.
             sender.backgroundColor = UIColor.green
         }
         else {
             questionLabel.text = "Try again!"
             sender.backgroundColor = UIColor.red
-            questionNumber -= 1
         }
-        // Si el número de pregunta todavía no llega al número de preguntas totales menos 1...
-        if(questionNumber < quiz.count-1) {
-            questionNumber += 1
-        }
-        else {
-            questionNumber = 0
-        }
-        // El siguiente método hace que el programa espere 0.5 segundos para realizar lo que tenga en su bloque de código.
+        
+        quizBrain.nextQuestion()
+        
+        // El siguiente método hace que el programa espere 0.4 segundos para realizar lo que tenga en su bloque de código.
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.4) {
             self.updateUI() // Actualizamos la etiqueta a la siguiente pregunta.
         }
@@ -51,16 +42,15 @@ class ViewController: UIViewController {
     
     // Función para cambiar la pregunta mostrada en la interfaz, reiniciar las características de los botones y actualizar la barra de progreso
     func updateUI() {
-        questionLabel.text = quiz[questionNumber].text
+        questionLabel.text = quizBrain.getQuestionText()
+        progressBar.progress = quizBrain.getProgress()
         trueButton.backgroundColor = UIColor.clear
         trueButton.titleLabel?.font = UIFont.systemFont(ofSize: 25.0)
         trueButton.alpha = 1.0
         falseButton.backgroundColor = UIColor.clear
         falseButton.titleLabel?.font = UIFont.systemFont(ofSize: 25.0)
         falseButton.alpha = 1.0
-        progressBar.progress = Float(questionNumber+1)/Float(quiz.count)
     }
-    
 }
 
 /* Código creado para practicar:
