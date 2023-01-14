@@ -17,6 +17,8 @@ struct QuizBrain {
                  Question(q: "Chocolate affects a dog's heart and nervous system; a few ounces are enough to kill a small dog.", a: "True")
     ]
     var questionNumber = 0
+    var score = 0
+    var flag = false
     
     /* Métodos */
     
@@ -25,11 +27,11 @@ struct QuizBrain {
         // Comparamos la respuesta con el array de objetos de tipo Question, específicamente el atributo "answer" del objeto en el índice "questionNumber".
         if(userAnswer == quiz[questionNumber].answer) {
             // El usuario eligió la respuesta correcta
+            score += 1
             return true
         }
         else {
             // El usuario eligió la respuesta incorrecta
-            questionNumber -= 1
             return false
         }
     }
@@ -41,9 +43,13 @@ struct QuizBrain {
             questionNumber += 1
         }
         else {
-            questionNumber = 0
+            questionNumber += 1
+            // Cambiamos la bandera a verdadero
+            flag = true
         }
     }
+    
+    /* Getters y setters */
     
     // Función que regresa el texto que debe ir en la etiqueta de la interfaz.
     func getQuestionText() -> String {
@@ -57,5 +63,27 @@ struct QuizBrain {
         return Float(questionNumber+1)/Float(quiz.count)
     }
     
+    func getScore() -> Int {
+        return score
+    }
     
+    mutating func setScore(_ score: Int) {
+        self.score = score
+    }
+    
+    func getQuestionNumber() -> Int {
+        return questionNumber
+    }
+    
+    mutating func setQuestionNumber(_ questionNumber: Int) {
+        self.questionNumber = questionNumber
+    }
+    
+    func getFlag() -> Bool {
+        return flag
+    }
+    
+    mutating func setFlag(_ flag: Bool) {
+        self.flag = flag
+    }
 }
